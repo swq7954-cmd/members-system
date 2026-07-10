@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الأعضاء والمعرفين المتقدم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #ca8a04;
+            --info: #0891b2;
+            --whatsapp: #25d366;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .header-edit-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        .header-edit-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header .header-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        header p {
+            color: #bfdbfe;
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .tab-btn:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .form-group label i {
+            margin-left: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #fafbfc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: white;
+        }
+
+        .form-control-file {
+            padding: 8px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .form-control-file:hover {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #15803d; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-info:hover { background: #0e7490; }
+        .btn-excel { background: #157347; color: white; }
+        .btn-excel:hover { background: #13653f; }
+        .btn-sm { padding: 6px 14px; font-size: 0.85rem; width: auto; }
+
+        .search-box {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .search-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            background: #e2e8f0;
+        }
+
+        .badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
+
+        .social-icon:hover { transform: scale(1.15); }
+        .fb { background: #1877f2; }
+        .tt { background: #000000; }
+        .in { background: #e1306c; }
+        .wa { 
+            background: var(--whatsapp); 
+            color: white; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-size: 0.8rem; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px; 
+            text-decoration: none; 
+            font-weight: bold;
+        }
+        .wa:hover { background: #1eb954; transform: scale(1.05); }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.05);
+        }
+
+        .field-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .field-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .field-item:hover {
+            background: #f8fafc;
+        }
+
+        .field-item .field-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .field-item .field-icon {
+            color: var(--primary);
+            margin-left: 10px;
+        }
+
+        .dynamic-field {
+            border-right: 3px solid var(--primary);
+            padding-right: 10px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover { color: var(--danger); }
+
+        .logo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: 10px auto;
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.6rem; }
+            .tab-btn { padding: 8px 16px; font-size: 0.85rem; }
+            .card { padding: 16px; }
+            th, td { padding: 8px 10px; font-size: 0.85rem; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ==================== HEADER ==================== -->
+    <header id="mainHeader">
+        <button class="header-edit-btn" onclick="openHeaderEditor()">
+            <i class="fa-solid fa-pen"></i> تخصيص الهيدر
+        </button>
+        <div id="headerContent">
+            <h1>
+                <span id="headerLogo">
+                    <i class="fa-solid fa-users-gear" style="font-size:2.5rem;"></i>
+                </span>
+                <span id="headerTitle">نظام إدارة الأعضاء والمُعرِّفين</span>
+            </h1>
+            <p id="headerSubtitle">إدارة متكاملة مع إضافة حقول مخصصة ديناميكية</p>
+        </div>
+    </header>
+
+    <!-- ==================== TABS ==================== -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('members-section')">
+            <i class="fa-solid fa-users"></i> الأعضاء
+        </button>
+        <button class="tab-btn" onclick="switchTab('referrers-section')">
+            <i class="fa-solid fa-user-shield"></i> المُعرِّفين
+        </button>
+        <button class="tab-btn" onclick="switchTab('fields-section')">
+            <i class="fa-solid fa-puzzle-piece"></i> إدارة الحقول
+        </button>
+    </div>
+
+    <!-- ==================== MEMBERS SECTION ==================== -->
+    <div id="members-section" class="tab-content active">
+        <div class="main-grid">
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-title" id="memberFormTitle">
+                        <i class="fa-solid fa-user-plus"></i> إضافة عضو جديد
+                    </div>
+                    <form id="memberForm">
+                        <input type="hidden" id="memberIndex">
+                        
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-user"></i> الاسم الثلاثي</label>
+                            <input type="text" id="mFullName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-phone"></i> رقم الهاتف</label>
+                            <input type="tel" id="mPhone" class="form-control" placeholder="مثال: 07700000000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-location-dot"></i> السكن / العنوان</label>
+                            <input type="text" id="mAddress" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-user-tie"></i> المُعرِّف</label>
+                            <select id="mReferrer" class="form-control" required>
+                                <option value="">-- اختر المُعرِّف --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-image"></i> صورة العضو</label>
+                            <input type="file" id="mImage" class="form-control-file" accept="image/*">
+                            <div id="mImagePreview" style="margin-top:8px;"></div>
+                        </div>
+
+                        <div id="dynamicFieldsContainer"></div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-facebook"></i> فيسبوك</label>
+                            <input type="url" id="mFb" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-tiktok"></i> تيك توك</label>
+                            <input type="url" id="mTt" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-instagram"></i> انستغرام</label>
+                            <input type="url" id="mIn" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <button type="submit" id="memberSubmitBtn" class="btn btn-primary">
+                            <i class="fa-solid fa-save"></i> حفظ العضو
+                        </button>
+                        <button type="button" id="cancelMemberEditBtn" class="btn btn-danger" style="display:none; margin-top:8px;">
+                            <i class="fa-solid fa-times"></i> إلغاء التعديل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="card search-box">
+                    <input type="text" id="searchMember" class="form-control" placeholder="🔍 بحث حسب الاسم، الهاتف، أو السكن...">
+                    <select id="filterMemberRef" class="form-control">
+                        <option value="">كل المُعرِّفين</option>
+                    </select>
+                    <button onclick="exportToExcel('members')" class="btn btn-excel" style="width:auto;">
+                        <i class="fa-solid fa-file-excel"></i> تصدير
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr id="membersTableHead">
+                                <th>الصورة</th>
+                                <th>الاسم الثلاثي</th>
+                                <th>رقم الهاتف</th>
+                                <th>السكن</th>
+                                <th>المُعرِّف</th>
+                                <th>التواصل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== REFERRERS SECTION ==================== -->
+    <div id="referrers-section" class="tab-content">
+        <div class="main-grid">
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-title" id="refFormTitle">
+                        <i class="fa-solid fa-user-plus"></i> إضافة مُعرِّف جديد
+                    </div>
+                    <form id="referrerForm">
+                        <input type="hidden" id="refIndex">
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-user"></i> اسم المُعرِّف الكامل</label>
+                            <input type="text" id="rName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-phone"></i> رقم هاتف المُعرِّف</label>
+                            <input type="tel" id="rPhone" class="form-control" placeholder="مثال: 07800000000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-location-dot"></i> السكن / العنوان</label>
+                            <input type="text" id="rAddress" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-image"></i> صورة المُعرِّف</label>
+                            <input type="file" id="rImage" class="form-control-file" accept="image/*">
+                            <div id="rImagePreview" style="margin-top:8px;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-facebook"></i> فيسبوك</label>
+                            <input type="url" id="rFb" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-tiktok"></i> تيك توك</label>
+                            <input type="url" id="rTt" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fab fa-instagram"></i> انستغرام</label>
+                            <input type="url" id="rIn" class="form-control" placeholder="https://...">
+                        </div>
+
+                        <button type="submit" id="refSubmitBtn" class="btn btn-success">
+                            <i class="fa-solid fa-save"></i> حفظ المُعرِّف
+                        </button>
+                        <button type="button" id="cancelRefEditBtn" class="btn btn-danger" style="display:none; margin-top:8px;">
+                            <i class="fa-solid fa-times"></i> إلغاء التعديل
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="card search-box">
+                    <input type="text" id="searchRef" class="form-control" placeholder="🔍 بحث حسب الاسم، الهاتف، أو السكن...">
+                    <button onclick="exportToExcel('referrers')" class="btn btn-excel" style="width:auto;">
+                        <i class="fa-solid fa-file-excel"></i> تصدير
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم المُعرِّف</th>
+                                <th>رقم الهاتف</th>
+                                <th>السكن</th>
+                                <th>التواصل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referrersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FIELDS SECTION ==================== -->
+    <div id="fields-section" class="tab-content">
+        <div class="card" style="max-width:700px; margin:0 auto;">
+            <div class="card-title">
+                <i class="fa-solid fa-puzzle-piece"></i> إدارة الحقول المخصصة
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">
+                    (أضف حقلاً جديداً مثل: العمر، المدينة، الوظيفة...)
+                </span>
+            </div>
+
+            <form id="fieldForm" style="margin-bottom:20px;">
+                <input type="hidden" id="fieldIndex">
+                <div class="form-group" style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" id="fieldName" class="form-control" placeholder="اسم الحقل الجديد (مثال: العمر)" required style="flex:1;">
+                    <button type="submit" id="fieldSubmitBtn" class="btn btn-primary" style="width:auto; padding:10px 24px;">
+                        <i class="fa-solid fa-plus"></i> إضافة
+                    </button>
+                    <button type="button" id="cancelFieldEditBtn" class="btn btn-danger" style="width:auto; padding:10px 20px; display:none;">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="field-list" id="fieldList"></div>
+
+            <div style="margin-top:15px; padding:12px; background:#f8fafc; border-radius:8px; font-size:0.9rem; color:var(--text-muted);">
+                <i class="fa-solid fa-info-circle"></i>
+                الحقول المضافة ستظهر تلقائياً في استمارة إضافة الأعضاء وفي الجدول
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== HEADER EDITOR MODAL ==================== -->
+<div class="modal-overlay" id="headerEditorModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-pen-to-square"></i> تخصيص الهيدر</h3>
+            <button class="modal-close" onclick="closeHeaderEditor()">&times;</button>
+        </div>
+        
+        <form id="headerForm">
+            <div class="form-group">
+                <label><i class="fa-solid fa-image"></i> الشعار (صورة)</label>
+                <input type="file" id="headerLogoInput" class="form-control-file" accept="image/*">
+                <div id="headerLogoPreview" style="margin-top:10px; text-align:center;">
+                    <img id="headerLogoImg" class="logo-preview" style="display:none;">
+                </div>
+                <button type="button" onclick="removeLogo()" class="btn btn-danger btn-sm" style="margin-top:8px; width:auto;">
+                    <i class="fa-solid fa-trash"></i> إزالة الشعار
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-heading"></i> النص الرئيسي</label>
+                <input type="text" id="headerTitleInput" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-paragraph"></i> النص الفرعي</label>
+                <input type="text" id="headerSubtitleInput" class="form-control" required>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button type="submit" class="btn btn-success" style="flex:1;">
+                    <i class="fa-solid fa-save"></i> حفظ التغييرات
+                </button>
+                <button type="button" onclick="resetHeaderDefaults()" class="btn btn-warning" style="flex:1; background:#ca8a04; color:white;">
+                    <i class="fa-solid fa-undo"></i> استعادة الافتراضي
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ==================== HEADER CONFIG ====================
+    let headerConfig = JSON.parse(localStorage.getItem('headerConfig_v1')) || {
+        title: 'نظام إدارة الأعضاء والمُعرِّفين',
+        subtitle: 'إدارة متكاملة مع إضافة حقول مخصصة ديناميكية',
+        logo: null // Base64 image or null
+    };
+
+    function applyHeaderConfig() {
+        const titleEl = document.getElementById('headerTitle');
+        const subtitleEl = document.getElementById('headerSubtitle');
+        const logoContainer = document.getElementById('headerLogo');
+        
+        titleEl.textContent = headerConfig.title;
+        subtitleEl.textContent = headerConfig.subtitle;
+
+        if (headerConfig.logo) {
+            logoContainer.innerHTML = `<img src="${headerConfig.logo}" class="header-logo">`;
+        } else {
+            logoContainer.innerHTML = `<i class="fa-solid fa-users-gear" style="font-size:2.5rem;"></i>`;
+        }
+    }
+
+    function openHeaderEditor() {
+        const modal = document.getElementById('headerEditorModal');
+        modal.classList.add('active');
+        
+        document.getElementById('headerTitleInput').value = headerConfig.title;
+        document.getElementById('headerSubtitleInput').value = headerConfig.subtitle;
+        
+        const preview = document.getElementById('headerLogoImg');
+        if (headerConfig.logo) {
+            preview.src = headerConfig.logo;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+
+    function closeHeaderEditor() {
+        document.getElementById('headerEditorModal').classList.remove('active');
+    }
+
+    document.getElementById('headerForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById('headerTitleInput').value.trim();
+        const subtitle = document.getElementById('headerSubtitleInput').value.trim();
+        
+        if (!title || !subtitle) {
+            alert('يرجى ملء جميع الحقول');
+            return;
+        }
+
+        headerConfig.title = title;
+        headerConfig.subtitle = subtitle;
+        
+        localStorage.setItem('headerConfig_v1', JSON.stringify(headerConfig));
+        applyHeaderConfig();
+        closeHeaderEditor();
+    });
+
+    document.getElementById('headerLogoInput').addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const preview = document.getElementById('headerLogoImg');
+                preview.src = ev.target.result;
+                preview.style.display = 'block';
+                headerConfig.logo = ev.target.result;
+                localStorage.setItem('headerConfig_v1', JSON.stringify(headerConfig));
+                applyHeaderConfig();
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    function removeLogo() {
+        headerConfig.logo = null;
+        localStorage.setItem('headerConfig_v1', JSON.stringify(headerConfig));
+        document.getElementById('headerLogoImg').style.display = 'none';
+        applyHeaderConfig();
+    }
+
+    function resetHeaderDefaults() {
+        if (confirm('هل أنت متأكد من استعادة الإعدادات الافتراضية؟')) {
+            headerConfig = {
+                title: 'نظام إدارة الأعضاء والمُعرِّفين',
+                subtitle: 'إدارة متكاملة مع إضافة حقول مخصصة ديناميكية',
+                logo: null
+            };
+            localStorage.setItem('headerConfig_v1', JSON.stringify(headerConfig));
+            document.getElementById('headerTitleInput').value = headerConfig.title;
+            document.getElementById('headerSubtitleInput').value = headerConfig.subtitle;
+            document.getElementById('headerLogoImg').style.display = 'none';
+            document.getElementById('headerLogoInput').value = '';
+            applyHeaderConfig();
+        }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('headerEditorModal').addEventListener('click', function(e) {
+        if (e.target === this) closeHeaderEditor();
+    });
+
+    // ==================== DATA ====================
+    let members = JSON.parse(localStorage.getItem('members_v5')) || [];
+    let referrers = JSON.parse(localStorage.getItem('referrers_v5')) || [];
+    let customFields = JSON.parse(localStorage.getItem('customFields_v5')) || [];
+
+    // ==================== UTILITY FUNCTIONS ====================
+    function formatWhatsAppLink(phone) {
+        let clean = phone.replace(/\D/g, '');
+        if (clean.startsWith('07')) clean = '964' + clean.substring(1);
+        else if (clean.startsWith('7')) clean = '964' + clean;
+        return `https://wa.me/${clean}`;
+    }
+
+    function getImagePreview(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function generateFieldId(fieldName) {
+        return 'field_' + fieldName.replace(/\s+/g, '_').toLowerCase();
+    }
+
+    // ==================== FIELD MANAGEMENT ====================
+    function renderFields() {
+        const container = document.getElementById('fieldList');
+        container.innerHTML = '';
+
+        if (customFields.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; padding:30px; color:var(--text-muted);">
+                    <i class="fa-solid fa-puzzle-piece" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+                    لا توجد حقول مخصصة. أضف حقلاً جديداً!
+                </div>
+            `;
+            return;
+        }
+
+        customFields.forEach((field, idx) => {
+            container.innerHTML += `
+                <div class="field-item">
+                    <span>
+                        <i class="fa-solid fa-grip-lines field-icon"></i>
+                        <strong>${field}</strong>
+                    </span>
+                    <div class="field-actions">
+                        <button onclick="editField(${idx})" class="btn-action btn-success btn-sm">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteField(${idx})" class="btn-action btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        renderDynamicFields();
+        updateTableHeaders();
+        renderMembersTable();
+    }
+
+    function renderDynamicFields() {
+        const container = document.getElementById('dynamicFieldsContainer');
+        container.innerHTML = '';
+
+        customFields.forEach(field => {
+            const fieldId = generateFieldId(field);
+            container.innerHTML += `
+                <div class="form-group dynamic-field">
+                    <label><i class="fa-solid fa-puzzle-piece"></i> ${field}</label>
+                    <input type="text" id="${fieldId}" class="form-control" placeholder="أدخل ${field}">
+                </div>
+            `;
+        });
+    }
+
+    function updateTableHeaders() {
+        const thead = document.getElementById('membersTableHead');
+        const existingHeaders = thead.querySelectorAll('th');
+        for (let i = existingHeaders.length - 2; i > 5; i--) {
+            if (existingHeaders[i]) {
+                existingHeaders[i].remove();
+            }
+        }
+
+        customFields.forEach(field => {
+            const th = document.createElement('th');
+            th.textContent = field;
+            thead.insertBefore(th, thead.lastElementChild);
+        });
+    }
+
+    document.getElementById('fieldForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('fieldName').value.trim();
+        const idx = document.getElementById('fieldIndex').value;
+
+        if (!name) return alert('يرجى إدخال اسم الحقل');
+
+        if (customFields.includes(name) && idx === '') {
+            return alert('هذا الحقل موجود بالفعل');
+        }
+
+        if (idx === '') {
+            customFields.push(name);
+            members.forEach(m => {
+                m[generateFieldId(name)] = '';
+            });
+        } else {
+            const oldName = customFields[parseInt(idx)];
+            const oldFieldId = generateFieldId(oldName);
+            const newFieldId = generateFieldId(name);
+            
+            members.forEach(m => {
+                if (m[oldFieldId] !== undefined) {
+                    m[newFieldId] = m[oldFieldId];
+                    delete m[oldFieldId];
+                }
+            });
+            
+            customFields[parseInt(idx)] = name;
+        }
+
+        localStorage.setItem('customFields_v5', JSON.stringify(customFields));
+        localStorage.setItem('members_v5', JSON.stringify(members));
+
+        document.getElementById('fieldForm').reset();
+        document.getElementById('fieldIndex').value = '';
+        document.getElementById('fieldSubmitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> إضافة';
+        document.getElementById('cancelFieldEditBtn').style.display = 'none';
+
+        renderFields();
+        renderMembersTable();
+    });
+
+    window.editField = function(idx) {
+        document.getElementById('fieldName').value = customFields[idx];
+        document.getElementById('fieldIndex').value = idx;
+        document.getElementById('fieldSubmitBtn').innerHTML = '<i class="fa-solid fa-pen"></i> تعديل';
+        document.getElementById('cancelFieldEditBtn').style.display = 'inline-flex';
+    };
+
+    window.deleteField = function(idx) {
+        const fieldName = customFields[idx];
+        const fieldId = generateFieldId(fieldName);
+        
+        if (!confirm(`هل أنت متأكد من حذف الحقل "${fieldName}"؟ سيتم حذف جميع بيانات هذا الحقل من الأعضاء.`)) {
+            return;
+        }
+
+        members.forEach(m => {
+            delete m[fieldId];
+        });
+
+        customFields.splice(idx, 1);
+        localStorage.setItem('customFields_v5', JSON.stringify(customFields));
+        localStorage.setItem('members_v5', JSON.stringify(members));
+
+        renderFields();
+        renderMembersTable();
+    };
+
+    document.getElementById('cancelFieldEditBtn').addEventListener('click', () => {
+        document.getElementById('fieldForm').reset();
+        document.getElementById('fieldIndex').value = '';
+        document.getElementById('fieldSubmitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> إضافة';
+        document.getElementById('cancelFieldEditBtn').style.display = 'none';
+    });
+
+    // ==================== REFERRER MANAGEMENT ====================
+    function updateReferrerDropdowns() {
+        const mSelect = document.getElementById('mReferrer');
+        const fSelect = document.getElementById('filterMemberRef');
+
+        mSelect.innerHTML = '<option value="">-- اختر المُعرِّف --</option>';
+        fSelect.innerHTML = '<option value="">كل المُعرِّفين</option>';
+
+        referrers.forEach(ref => {
+            mSelect.add(new Option(ref.name, ref.name));
+            fSelect.add(new Option(ref.name, ref.name));
+        });
+    }
+
+    // ==================== RENDER TABLES ====================
+    function renderMembersTable() {
+        const query = document.getElementById('searchMember').value.toLowerCase();
+        const selectedRef = document.getElementById('filterMemberRef').value;
+        const tbody = document.getElementById('membersTableBody');
+        tbody.innerHTML = '';
+
+        const filtered = members.filter(m => {
+            const matchQuery = m.fullName.toLowerCase().includes(query) ||
+                              m.phone.includes(query) ||
+                              m.address.toLowerCase().includes(query);
+            const matchRef = selectedRef === '' || m.referrer === selectedRef;
+            return matchQuery && matchRef;
+        });
+
+        if (filtered.length === 0) {
+            const colCount = 6 + customFields.length + 1;
+            tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; color:var(--text-muted); padding:30px;">
+                <i class="fa-solid fa-search" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+                لا توجد نتائج
+            </td></tr>`;
+            return;
+        }
+
+        filtered.forEach((m) => {
+            const avatar = m.image ? `<img src="${m.image}" class="avatar">` :
+                           `<div class="avatar" style="display:flex;align-items:center;justify-content:center;background:#e2e8f0;color:#94a3b8;">
+                                <i class="fa-solid fa-user"></i>
+                            </div>`;
+
+            let row = `<tr>
+                <td>${avatar}</td>
+                <td><strong>${m.fullName}</strong></td>
+                <td>
+                    ${m.phone}
+                    <a href="${formatWhatsAppLink(m.phone)}" target="_blank" class="wa" title="مراسلة عبر واتساب">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </td>
+                <td>${m.address}</td>
+                <td><span class="badge badge-success">${m.referrer}</span></td>
+                <td>
+                    <div class="social-links">
+                        ${m.fb ? `<a href="${m.fb}" target="_blank" class="social-icon fb"><i class="fab fa-facebook-f"></i></a>` : ''}
+                        ${m.tt ? `<a href="${m.tt}" target="_blank" class="social-icon tt"><i class="fab fa-tiktok"></i></a>` : ''}
+                        ${m.in ? `<a href="${m.in}" target="_blank" class="social-icon in"><i class="fab fa-instagram"></i></a>` : ''}
+                    </div>
+                </td>`;
+
+            customFields.forEach(field => {
+                const fieldId = generateFieldId(field);
+                row += `<td>${m[fieldId] || ''}</td>`;
+            });
+
+            row += `
+                <td>
+                    <div class="actions">
+                        <button onclick="editMember(${members.indexOf(m)})" class="btn-action btn-success btn-sm">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteMember(${members.indexOf(m)})" class="btn-action btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+
+            tbody.innerHTML += row;
+        });
+    }
+
+    function renderReferrersTable() {
+        const query = document.getElementById('searchRef').value.toLowerCase();
+        const tbody = document.getElementById('referrersTableBody');
+        tbody.innerHTML = '';
+
+        const filtered = referrers.filter(r =>
+            r.name.toLowerCase().includes(query) ||
+            r.phone.includes(query) ||
+            r.address.toLowerCase().includes(query)
+        );
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">
+                <i class="fa-solid fa-search" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+                لا توجد نتائج
+            </td></tr>`;
+            return;
+        }
+
+        filtered.forEach((r) => {
+            const avatar = r.image ? `<img src="${r.image}" class="avatar">` :
+                           `<div class="avatar" style="display:flex;align-items:center;justify-content:center;background:#e2e8f0;color:#94a3b8;">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>`;
+
+            tbody.innerHTML += `<tr>
+                <td>${avatar}</td>
+                <td><strong>${r.name}</strong></td>
+                <td>
+                    ${r.phone}
+                    <a href="${formatWhatsAppLink(r.phone)}" target="_blank" class="wa" title="مراسلة عبر واتساب">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </td>
+                <td>${r.address}</td>
+                <td>
+                    <div class="social-links">
+                        ${r.fb ? `<a href="${r.fb}" target="_blank" class="social-icon fb"><i class="fab fa-facebook-f"></i></a>` : ''}
+                        ${r.tt ? `<a href="${r.tt}" target="_blank" class="social-icon tt"><i class="fab fa-tiktok"></i></a>` : ''}
+                        ${r.in ? `<a href="${r.in}" target="_blank" class="social-icon in"><i class="fab fa-instagram"></i></a>` : ''}
+                    </div>
+                </td>
+                <td>
+                    <div class="actions">
+                        <button onclick="editReferrer(${referrers.indexOf(r)})" class="btn-action btn-success btn-sm">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteReferrer(${referrers.indexOf(r)})" class="btn-action btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+    }
+
+    // ==================== MEMBER CRUD ====================
+    document.getElementById('memberForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const idx = document.getElementById('memberIndex').value;
+        const fileInput = document.getElementById('mImage');
+        let imageData = '';
+
+        if (fileInput.files && fileInput.files[0]) {
+            imageData = await getImagePreview(fileInput.files[0]);
+        }
+
+        const data = {
+            fullName: document.getElementById('mFullName').value.trim(),
+            phone: document.getElementById('mPhone').value.trim(),
+            address: document.getElementById('mAddress').value.trim(),
+            referrer: document.getElementById('mReferrer').value,
+            image: imageData || (idx !== '' ? members[parseInt(idx)].image : ''),
+            fb: document.getElementById('mFb').value.trim(),
+            tt: document.getElementById('mTt').value.trim(),
+            in: document.getElementById('mIn').value.trim()
+        };
+
+        customFields.forEach(field => {
+            const fieldId = generateFieldId(field);
+            data[fieldId] = document.getElementById(fieldId).value.trim();
+        });
+
+        if (idx === '') {
+            members.push(data);
+        } else {
+            const existing = members[parseInt(idx)];
+            customFields.forEach(field => {
+                const fieldId = generateFieldId(field);
+                if (data[fieldId] === '' && existing[fieldId]) {
+                    data[fieldId] = existing[fieldId];
+                }
+            });
+            members[parseInt(idx)] = data;
+            resetMemberForm();
+        }
+
+        localStorage.setItem('members_v5', JSON.stringify(members));
+        document.getElementById('memberForm').reset();
+        document.getElementById('mImagePreview').innerHTML = '';
+        renderMembersTable();
+    });
+
+    window.editMember = function(idx) {
+        const m = members[idx];
+        document.getElementById('memberIndex').value = idx;
+        document.getElementById('mFullName').value = m.fullName;
+        document.getElementById('mPhone').value = m.phone;
+        document.getElementById('mAddress').value = m.address;
+        document.getElementById('mReferrer').value = m.referrer || '';
+        document.getElementById('mFb').value = m.fb || '';
+        document.getElementById('mTt').value = m.tt || '';
+        document.getElementById('mIn').value = m.in || '';
+
+        customFields.forEach(field => {
+            const fieldId = generateFieldId(field);
+            document.getElementById(fieldId).value = m[fieldId] || '';
+        });
+
+        if (m.image) {
+            document.getElementById('mImagePreview').innerHTML =
+                `<img src="${m.image}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);">`;
+        }
+
+        document.getElementById('memberFormTitle').innerHTML = '<i class="fa-solid fa-pen"></i> تعديل بيانات العضو';
+        document.getElementById('memberSubmitBtn').innerHTML = '<i class="fa-solid fa-save"></i> تحديث العضو';
+        document.getElementById('cancelMemberEditBtn').style.display = 'block';
+    };
+
+    window.deleteMember = function(idx) {
+        if (confirm('هل أنت متأكد من حذف هذا العضو؟')) {
+            members.splice(idx, 1);
+            localStorage.setItem('members_v5', JSON.stringify(members));
+            renderMembersTable();
+        }
+    };
+
+    function resetMemberForm() {
+        document.getElementById('memberIndex').value = '';
+        document.getElementById('memberFormTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> إضافة عضو جديد';
+        document.getElementById('memberSubmitBtn').innerHTML = '<i class="fa-solid fa-save"></i> حفظ العضو';
+        document.getElementById('cancelMemberEditBtn').style.display = 'none';
+        document.getElementById('mImagePreview').innerHTML = '';
+        customFields.forEach(field => {
+            document.getElementById(generateFieldId(field)).value = '';
+        });
+    }
+
+    document.getElementById('cancelMemberEditBtn').addEventListener('click', () => {
+        document.getElementById('memberForm').reset();
+        document.getElementById('mImagePreview').innerHTML = '';
+        resetMemberForm();
+    });
+
+    // ==================== REFERRER CRUD ====================
+    document.getElementById('referrerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const idx = document.getElementById('refIndex').value;
+        const fileInput = document.getElementById('rImage');
+        let imageData = '';
+
+        if (fileInput.files && fileInput.files[0]) {
+            imageData = await getImagePreview(fileInput.files[0]);
+        }
+
+        const data = {
+            name: document.getElementById('rName').value.trim(),
+            phone: document.getElementById('rPhone').value.trim(),
+            address: document.getElementById('rAddress').value.trim(),
+            image: imageData || (idx !== '' ? referrers[parseInt(idx)].image : ''),
+            fb: document.getElementById('rFb').value.trim(),
+            tt: document.getElementById('rTt').value.trim(),
+            in: document.getElementById('rIn').value.trim()
+        };
+
+        if (idx === '') {
+            referrers.push(data);
+        } else {
+            referrers[parseInt(idx)] = data;
+            resetRefForm();
+        }
+
+        localStorage.setItem('referrers_v5', JSON.stringify(referrers));
+        document.getElementById('referrerForm').reset();
+        document.getElementById('rImagePreview').innerHTML = '';
+        updateReferrerDropdowns();
+        renderReferrersTable();
+    });
+
+    window.editReferrer = function(idx) {
+        const r = referrers[idx];
+        document.getElementById('refIndex').value = idx;
+        document.getElementById('rName').value = r.name;
+        document.getElementById('rPhone').value = r.phone;
+        document.getElementById('rAddress').value = r.address;
+        document.getElementById('rFb').value = r.fb || '';
+        document.getElementById('rTt').value = r.tt || '';
+        document.getElementById('rIn').value = r.in || '';
+
+        if (r.image) {
+            document.getElementById('rImagePreview').innerHTML =
+                `<img src="${r.image}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--success);">`;
+        }
+
+        document.getElementById('refFormTitle').innerHTML = '<i class="fa-solid fa-pen"></i> تعديل بيانات المُعرِّف';
+        document.getElementById('refSubmitBtn').innerHTML = '<i class="fa-solid fa-save"></i> تحديث المُعرِّف';
+        document.getElementById('cancelRefEditBtn').style.display = 'block';
+    };
+
+    window.deleteReferrer = function(idx) {
+        const refName = referrers[idx].name;
+        const usedByMembers = members.filter(m => m.referrer === refName);
+
+        if (usedByMembers.length > 0) {
+            if (!confirm(`هذا المُعرِّف مرتبط بـ ${usedByMembers.length} عضو. هل أنت متأكد من الحذف؟`)) {
+                return;
+            }
+            members.forEach(m => { if (m.referrer === refName) m.referrer = ''; });
+            localStorage.setItem('members_v5', JSON.stringify(members));
+        }
+
+        referrers.splice(idx, 1);
+        localStorage.setItem('referrers_v5', JSON.stringify(referrers));
+        updateReferrerDropdowns();
+        renderReferrersTable();
+        renderMembersTable();
+    };
+
+    function resetRefForm() {
+        document.getElementById('refIndex').value = '';
+        document.getElementById('refFormTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> إضافة مُعرِّف جديد';
+        document.getElementById('refSubmitBtn').innerHTML = '<i class="fa-solid fa-save"></i> حفظ المُعرِّف';
+        document.getElementById('cancelRefEditBtn').style.display = 'none';
+        document.getElementById('rImagePreview').innerHTML = '';
+    }
+
+    document.getElementById('cancelRefEditBtn').addEventListener('click', () => {
+        document.getElementById('referrerForm').reset();
+        document.getElementById('rImagePreview').innerHTML = '';
+        resetRefForm();
+    });
+
+    // ==================== TAB SWITCH ====================
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+
+        const buttons = document.querySelectorAll('.tab-btn');
+        const tabMap = {
+            'members-section': 0,
+            'referrers-section': 1,
+            'fields-section': 2
+        };
+        if (tabMap[tabId] !== undefined) {
+            buttons[tabMap[tabId]].classList.add('active');
+        }
+    }
+
+    // ==================== EXPORT TO EXCEL ====================
+    function exportToExcel(type) {
+        let htmlTable = `
+            <meta charset="utf-8">
+            <style>
+                table { border-collapse: collapse; direction: rtl; text-align: right; }
+                th { background-color: #1e3a8a; color: white; font-weight: bold; padding: 10px; border: 1px solid #ddd; }
+                td { padding: 8px; border: 1px solid #ddd; }
+            </style>
+            <table>
+        `;
+
+        if (type === 'members') {
+            let headers = ['الاسم الثلاثي', 'رقم الهاتف', 'رابط الواتساب', 'السكن', 'المُعرِّف', 'فيسبوك', 'تيك توك', 'انستغرام'];
+            customFields.forEach(f => headers.push(f));
+
+            htmlTable += `<thead><tr>`;
+            headers.forEach(h => htmlTable += `<th>${h}</th>`);
+            htmlTable += `</tr></thead><tbody>`;
+
+            members.forEach(m => {
+                htmlTable += `<tr>
+                    <td>${m.fullName}</td>
+                    <td>'${m.phone}</td>
+                    <td>${formatWhatsAppLink(m.phone)}</td>
+                    <td>${m.address}</td>
+                    <td>${m.referrer}</td>
+                    <td>${m.fb || ''}</td>
+                    <td>${m.tt || ''}</td>
+                    <td>${m.in || ''}</td>`;
+                
+                customFields.forEach(field => {
+                    const fieldId = generateFieldId(field);
+                    htmlTable += `<td>${m[fieldId] || ''}</td>`;
+                });
+                
+                htmlTable += `</tr>`;
+            });
+        } else {
+            htmlTable += `
+                <thead><tr>
+                    <th>اسم المُعرِّف</th>
+                    <th>رقم الهاتف</th>
+                    <th>رابط الواتساب</th>
+                    <th>السكن</th>
+                    <th>فيسبوك</th>
+                    <th>تيك توك</th>
+                    <th>انستغرام</th>
+                </tr></thead><tbody>
+            `;
+            referrers.forEach(r => {
+                htmlTable += `
+                    <tr>
+                        <td>${r.name}</td>
+                        <td>'${r.phone}</td>
+                        <td>${formatWhatsAppLink(r.phone)}</td>
+                        <td>${r.address}</td>
+                        <td>${r.fb || ''}</td>
+                        <td>${r.tt || ''}</td>
+                        <td>${r.in || ''}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        htmlTable += '</tbody></table>';
+
+        const blob = new Blob(['\uFEFF' + htmlTable], { type: 'application/vnd.ms-excel;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${type === 'members' ? 'الأعضاء' : 'المعرفين'}_${new Date().toISOString().slice(0,10)}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('searchMember').addEventListener('input', renderMembersTable);
+    document.getElementById('filterMemberRef').addEventListener('change', renderMembersTable);
+    document.getElementById('searchRef').addEventListener('input', renderReferrersTable);
+
+    // Image preview
+    document.getElementById('mImage').addEventListener('change', function(e) {
+        const preview = document.getElementById('mImagePreview');
+        preview.innerHTML = '';
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                preview.innerHTML = `<img src="${ev.target.result}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);">`;
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    document.getElementById('rImage').addEventListener('change', function(e) {
+        const preview = document.getElementById('rImagePreview');
+        preview.innerHTML = '';
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                preview.innerHTML = `<img src="${ev.target.result}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--success);">`;
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    // ==================== INIT ====================
+    applyHeaderConfig();
+    renderFields();
+    updateReferrerDropdowns();
+    renderMembersTable();
+    renderReferrersTable();
+</script>
+
+</body>
+</html>
